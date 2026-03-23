@@ -61,6 +61,7 @@ export class Game {
 
     this.input = new InputController(this.renderer.domElement);
     this.input.attach();
+    this.input.mountMobileControls(this.root);
 
     this.cameraRig = new CameraRig(camera);
     this.movementSystem = new MovementSystem(this.cameraRig, this.input);
@@ -90,6 +91,7 @@ export class Game {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.input?.updateMobileLayout();
   };
 
   rebuildRoster() {
@@ -138,6 +140,7 @@ export class Game {
   }
 
   startChallenge() {
+    this.input.requestLandscape();
     this.state = this.createState();
     resetPlayerPositions(this.state);
     this.rebuildRoster();

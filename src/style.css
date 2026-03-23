@@ -51,6 +51,11 @@ body {
   cursor: none;
 }
 
+.mobile-controls,
+.rotate-overlay {
+  display: none;
+}
+
 .hud,
 .start-panel,
 .result-panel,
@@ -317,5 +322,91 @@ body {
     right: 12px;
     bottom: 12px;
     width: auto;
+  }
+}
+
+@media (pointer: coarse) {
+  .mobile-controls {
+    position: absolute;
+    inset: 0;
+    display: block;
+    pointer-events: none;
+  }
+
+  .joystick-zone {
+    position: absolute;
+    left: 22px;
+    bottom: 22px;
+    width: 132px;
+    height: 132px;
+    display: grid;
+    place-items: center;
+    pointer-events: auto;
+  }
+
+  .joystick-base {
+    width: 116px;
+    height: 116px;
+    border-radius: 50%;
+    background: rgba(8, 18, 30, 0.34);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    display: grid;
+    place-items: center;
+  }
+
+  .joystick-thumb {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255, 222, 117, 0.9);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
+    transition: transform 40ms linear;
+  }
+
+  .mobile-action {
+    position: absolute;
+    right: 26px;
+    bottom: 28px;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 234, 167, 0.42);
+    background: radial-gradient(circle at 30% 30%, rgba(255, 232, 137, 0.98), rgba(205, 128, 22, 0.92));
+    color: #231100;
+    font-size: 18px;
+    font-weight: 800;
+    pointer-events: auto;
+  }
+
+  .rotate-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(5, 9, 14, 0.84);
+    z-index: 40;
+  }
+
+  .rotate-card {
+    width: min(320px, calc(100% - 40px));
+    padding: 22px;
+    border-radius: 24px;
+    background: rgba(15, 24, 34, 0.96);
+    border: 1px solid rgba(255, 222, 117, 0.24);
+    text-align: center;
+  }
+
+  .rotate-card strong {
+    display: block;
+    font-size: 28px;
+    color: #fff1a6;
+  }
+
+  .rotate-card span {
+    display: block;
+    margin-top: 10px;
+    color: rgba(229, 237, 248, 0.82);
+    line-height: 1.5;
   }
 }
