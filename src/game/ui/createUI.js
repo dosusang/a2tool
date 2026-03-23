@@ -145,7 +145,7 @@ export function createUI(root, callbacks) {
       reactionMaxLabel: startPanel.querySelector('[data-role="reaction-max-label"]'),
       spotlightValue: spotlight.querySelector('[data-role="spotlight-value"]'),
     },
-    render(state, localPlayer, viewDirection) {
+    render(state, localPlayer, viewDirection, bossPosition) {
       this.numberButtons.forEach((button, idx) => {
         const active = idx + 1 === state.selectedPlayerId;
         button.classList.toggle('active', active);
@@ -201,7 +201,7 @@ export function createUI(root, callbacks) {
         this.fields.resultDetail.textContent = state.result.detail;
       }
 
-      drawMinimap(this.minimap, state.players, localPlayer, viewDirection, state.showMinimapHints);
+      drawMinimap(this.minimap, state.players, localPlayer, viewDirection, state.showMinimapHints, bossPosition);
     },
   };
 }
@@ -234,7 +234,7 @@ function currentTimerLabel(state) {
   return formatSeconds(ORB_TRAVEL_TIME - (state.time - PREP_DURATION));
 }
 
-function drawMinimap(canvas, players, localPlayer, viewDirection, showHints) {
+function drawMinimap(canvas, players, localPlayer, viewDirection, showHints, bossPosition) {
   const ctx = canvas.getContext('2d');
   const size = canvas.width;
   const center = size / 2;
@@ -247,6 +247,10 @@ function drawMinimap(canvas, players, localPlayer, viewDirection, showHints) {
 
   if (showHints) {
     drawHintMarkers(ctx, center, playfieldRadius);
+  }
+
+  if (bossPosition) {
+    drawBossMarker(ctx, center + bossPosition.x * scale, center + bossPosition.z * scale, 7.5);
   }
 
   players.forEach((player) => {
@@ -275,6 +279,33 @@ function drawMinimap(canvas, players, localPlayer, viewDirection, showHints) {
     ctx.closePath();
     ctx.fill();
   }
+}
+
+function drawBossMarker(ctx, x, y, size) {
+  ctx.save();
+  ctx.translate(x, y);
+
+  ctx.beginPath();
+  ctx.moveTo(0, size);
+  ctx.lineTo(-size * 0.9, -size * 0.7);
+  ctx.lineTo(size * 0.9, -size * 0.7);
+  ctx.closePath();
+  ctx.fillStyle = '#5b4a18';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(0, size * 0.58);
+  ctx.lineTo(-size * 0.56, -size * 0.32);
+  ctx.lineTo(size * 0.56, -size * 0.32);
+  ctx.closePath();
+  ctx.fillStyle = '#f0b93d';
+  ctx.fill();
+
+  ctx.strokeStyle = 'rgba(255, 238, 188, 0.9)';
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+
+  ctx.restore();
 }
 
 function drawMinimapBackdrop(ctx, size, center, radius) {

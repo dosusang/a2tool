@@ -237,7 +237,7 @@ export class Game {
     });
 
     this.bossVisual.update(this.state.bossJumpTime, this.state.phase, this.state.bossSpawnPosition);
-    this.ui.render(this.state, focusPlayer, this.cameraRig.planarForward);
+    this.ui.render(this.state, focusPlayer, this.cameraRig.planarForward, this.bossVisual.group.position);
     this.renderer.render(this.scene, this.camera);
   }
 }
