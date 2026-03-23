@@ -88,14 +88,9 @@ export class Game {
   }
 
   handleResize = () => {
-    const forcedLandscape = this.input?.isForcedLandscapePortrait?.() ?? false;
-    const renderWidth = forcedLandscape ? window.innerHeight : window.innerWidth;
-    const renderHeight = forcedLandscape ? window.innerWidth : window.innerHeight;
-
-    this.root.classList.toggle('force-landscape', forcedLandscape);
-    this.camera.aspect = renderWidth / renderHeight;
+    this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(renderWidth, renderHeight);
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.input?.updateMobileLayout();
   };
 
@@ -145,7 +140,6 @@ export class Game {
   }
 
   startChallenge() {
-    this.input.requestLandscape();
     this.state = this.createState();
     resetPlayerPositions(this.state);
     this.rebuildRoster();

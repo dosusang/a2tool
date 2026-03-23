@@ -82,7 +82,16 @@ export function createUI(root, callbacks) {
     <div class="tip-line">惩罚2：任意一个球到达边缘则团灭</div>
   `;
 
-  root.append(hud, spotlight, minimapPanel, startPanel, resultPanel, tipsPanel);
+  const mobileBlocker = document.createElement('div');
+  mobileBlocker.className = 'mobile-blocker';
+  mobileBlocker.innerHTML = `
+    <div class="mobile-blocker-card">
+      <strong>请用 PC 打开网页</strong>
+      <span>当前版本仅适配键鼠操作。为了保证视角、移动和机制练习体验，请在电脑浏览器中打开。</span>
+    </div>
+  `;
+
+  root.append(hud, spotlight, minimapPanel, startPanel, resultPanel, tipsPanel, mobileBlocker);
 
   const numberGrid = startPanel.querySelector('[data-role="number-grid"]');
   for (let i = 1; i <= 8; i += 1) {
