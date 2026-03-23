@@ -140,7 +140,6 @@ export class Game {
   }
 
   startChallenge() {
-    this.input.requestLandscape();
     this.state = this.createState();
     resetPlayerPositions(this.state);
     this.rebuildRoster();
