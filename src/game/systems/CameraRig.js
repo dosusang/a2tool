@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import {
   CAMERA_DISTANCE,
+  CAMERA_DISTANCE_MAX,
+  CAMERA_DISTANCE_MIN,
+  CAMERA_ZOOM_STEP,
   CAMERA_HEIGHT,
   CAMERA_PITCH_MAX,
   CAMERA_PITCH_MIN,
@@ -13,6 +16,7 @@ export class CameraRig {
     this.yaw = Math.PI;
     this.pitch = -0.3;
     this.lookSensitivity = 0.0028;
+    this.distance = CAMERA_DISTANCE;
     this.target = new THREE.Vector3();
     this.planarForward = new THREE.Vector3(0, 0, -1);
     this.planarRight = new THREE.Vector3(1, 0, 0);
@@ -21,8 +25,14 @@ export class CameraRig {
 
   update(player, input) {
     const lookDelta = input.consumeLookDelta();
+    const zoomDelta = input.consumeZoomDelta();
     this.yaw -= lookDelta.x * this.lookSensitivity;
     this.pitch = clamp(this.pitch - lookDelta.y * this.lookSensitivity, CAMERA_PITCH_MIN, CAMERA_PITCH_MAX);
+    this.distance = clamp(
+      this.distance + zoomDelta * CAMERA_ZOOM_STEP,
+      CAMERA_DISTANCE_MIN,
+      CAMERA_DISTANCE_MAX,
+    );
 
     this.target.copy(player.position);
     this.target.y += CAMERA_HEIGHT;
@@ -32,7 +42,7 @@ export class CameraRig {
       Math.sin(this.pitch),
       Math.cos(this.yaw) * Math.cos(this.pitch),
     );
-    const desiredPosition = this.target.clone().sub(direction.multiplyScalar(CAMERA_DISTANCE));
+    const desiredPosition = this.target.clone().sub(direction.multiplyScalar(this.distance));
 
     this.camera.position.copy(desiredPosition);
     this.camera.lookAt(this.target);
