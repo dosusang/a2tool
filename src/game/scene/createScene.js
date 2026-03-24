@@ -52,6 +52,9 @@ export function createScene(renderer) {
   outerRing.position.y = 0.05;
   scene.add(outerRing);
 
+  scene.add(createEntranceRoad());
+  scene.add(createNorthPillar());
+
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
@@ -59,6 +62,198 @@ export function createScene(renderer) {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   return { scene, camera };
+}
+
+function createEntranceRoad() {
+  const group = new THREE.Group();
+  const roadWidth = 18;
+  const roadLength = 56;
+  const roadCenterZ = ARENA_RADIUS + 25;
+
+  const road = new THREE.Mesh(
+    new THREE.BoxGeometry(roadWidth, 0.36, roadLength),
+    new THREE.MeshStandardMaterial({
+      color: 0x2d3c49,
+      roughness: 0.94,
+      metalness: 0.1,
+    }),
+  );
+  road.position.set(0, -0.18, roadCenterZ);
+  road.receiveShadow = true;
+  group.add(road);
+
+  const lane = new THREE.Mesh(
+    new THREE.PlaneGeometry(7.5, roadLength - 4),
+    new THREE.MeshBasicMaterial({
+      color: 0x4b6170,
+      transparent: true,
+      opacity: 0.3,
+    }),
+  );
+  lane.rotation.x = -Math.PI / 2;
+  lane.position.set(0, 0.02, roadCenterZ + 1);
+  group.add(lane);
+
+  const threshold = new THREE.Mesh(
+    new THREE.BoxGeometry(roadWidth + 2, 0.5, 3.2),
+    new THREE.MeshStandardMaterial({
+      color: 0x627487,
+      roughness: 0.55,
+      metalness: 0.42,
+      emissive: 0x18222f,
+      emissiveIntensity: 0.8,
+    }),
+  );
+  threshold.position.set(0, 0.25, ARENA_RADIUS - 0.6);
+  threshold.castShadow = true;
+  threshold.receiveShadow = true;
+  group.add(threshold);
+
+  const leftRail = new THREE.Mesh(
+    new THREE.BoxGeometry(1.4, 1.7, roadLength),
+    new THREE.MeshStandardMaterial({
+      color: 0x56697c,
+      roughness: 0.5,
+      metalness: 0.55,
+    }),
+  );
+  leftRail.position.set(-(roadWidth * 0.5) - 0.7, 0.85, roadCenterZ);
+  leftRail.castShadow = true;
+  group.add(leftRail);
+
+  const rightRail = leftRail.clone();
+  rightRail.position.x = (roadWidth * 0.5) + 0.7;
+  group.add(rightRail);
+
+  const gateLeft = new THREE.Mesh(
+    new THREE.BoxGeometry(1.8, 5.5, 2.4),
+    new THREE.MeshStandardMaterial({
+      color: 0x788797,
+      roughness: 0.45,
+      metalness: 0.7,
+    }),
+  );
+  gateLeft.position.set(-(roadWidth * 0.5) - 0.8, 2.75, ARENA_RADIUS - 1.5);
+  gateLeft.castShadow = true;
+  group.add(gateLeft);
+
+  const gateRight = gateLeft.clone();
+  gateRight.position.x = (roadWidth * 0.5) + 0.8;
+  group.add(gateRight);
+
+  return group;
+}
+
+function createNorthPillar() {
+  const group = new THREE.Group();
+  group.position.set(0, 0, -ARENA_RADIUS - 3.5);
+
+  const base = new THREE.Mesh(
+    new THREE.CylinderGeometry(3.6, 4.6, 2.4, 8),
+    new THREE.MeshStandardMaterial({
+      color: 0x48515d,
+      roughness: 0.72,
+      metalness: 0.45,
+    }),
+  );
+  base.position.y = 1.2;
+  base.castShadow = true;
+  base.receiveShadow = true;
+  group.add(base);
+
+  const pillar = new THREE.Mesh(
+    new THREE.CylinderGeometry(1.7, 2.25, 13.5, 10),
+    new THREE.MeshStandardMaterial({
+      color: 0x8d97a6,
+      roughness: 0.42,
+      metalness: 0.88,
+    }),
+  );
+  pillar.position.y = 8.4;
+  pillar.castShadow = true;
+  pillar.receiveShadow = true;
+  group.add(pillar);
+
+  const head = new THREE.Mesh(
+    new THREE.SphereGeometry(2.6, 36, 24),
+    new THREE.MeshStandardMaterial({
+      color: 0x202942,
+      roughness: 0.24,
+      metalness: 0.38,
+      emissive: 0x0a1220,
+      emissiveIntensity: 0.55,
+    }),
+  );
+  head.position.set(0, 14.35, 0);
+  head.scale.set(1.3, 0.82, 1.02);
+  head.castShadow = true;
+  group.add(head);
+
+  const eyeSocket = new THREE.Mesh(
+    new THREE.BoxGeometry(4.4, 1.6, 0.4),
+    new THREE.MeshStandardMaterial({
+      color: 0x070a12,
+      roughness: 0.5,
+      metalness: 0.12,
+    }),
+  );
+  eyeSocket.position.set(0, 14.2, 2.18);
+  eyeSocket.castShadow = true;
+  group.add(eyeSocket);
+
+  const upperLid = new THREE.Mesh(
+    new THREE.CylinderGeometry(1.7, 1.7, 3.8, 24, 1, false, 0, Math.PI),
+    new THREE.MeshBasicMaterial({
+      color: 0xf0bd52,
+    }),
+  );
+  upperLid.rotation.z = Math.PI / 2;
+  upperLid.rotation.y = Math.PI / 2;
+  upperLid.position.set(0, 14.55, 2.34);
+  upperLid.scale.set(1, 0.36, 0.3);
+  group.add(upperLid);
+
+  const lowerLid = new THREE.Mesh(
+    new THREE.CylinderGeometry(1.45, 1.45, 3.5, 24, 1, false, 0, Math.PI),
+    new THREE.MeshBasicMaterial({
+      color: 0xcf8b30,
+    }),
+  );
+  lowerLid.rotation.z = -Math.PI / 2;
+  lowerLid.rotation.y = Math.PI / 2;
+  lowerLid.position.set(0, 13.82, 2.34);
+  lowerLid.scale.set(1, 0.26, 0.24);
+  group.add(lowerLid);
+
+  const eyeball = new THREE.Mesh(
+    new THREE.SphereGeometry(1.18, 32, 24),
+    new THREE.MeshStandardMaterial({
+      color: 0xff4d32,
+      emissive: 0xff1400,
+      emissiveIntensity: 1.7,
+      roughness: 0.12,
+      metalness: 0.02,
+    }),
+  );
+  eyeball.position.set(0, 14.16, 2.12);
+  eyeball.scale.set(1.1, 0.76, 0.3);
+  eyeball.castShadow = true;
+  group.add(eyeball);
+
+  const pupil = new THREE.Mesh(
+    new THREE.BoxGeometry(0.2, 1.15, 0.08),
+    new THREE.MeshBasicMaterial({
+      color: 0x170200,
+    }),
+  );
+  pupil.position.set(0, 14.16, 2.5);
+  group.add(pupil);
+
+  const innerGlow = new THREE.PointLight(0xff2a16, 2.6, 24, 2);
+  innerGlow.position.set(0, 14.2, 2.1);
+  group.add(innerGlow);
+
+  return group;
 }
 
 function createFloorNoiseTexture() {
