@@ -149,7 +149,7 @@ export function createUI(root, callbacks) {
       this.numberButtons.forEach((button, idx) => {
         const active = idx + 1 === state.selectedPlayerId;
         button.classList.toggle('active', active);
-        button.disabled = state.debugAutoplayAll;
+        button.disabled = false;
       });
 
       this.fields.modePlayer.classList.toggle('active', !state.debugAutoplayAll);
@@ -167,7 +167,7 @@ export function createUI(root, callbacks) {
         ? '演示模式结束后可点击“重新开始”继续下一轮。'
         : '玩家模式支持空格快速重开，也可以点按钮重新开始。';
 
-      this.fields.selectedId.textContent = state.debugAutoplayAll ? 'AI-1' : `${state.selectedPlayerId}`;
+      this.fields.selectedId.textContent = state.debugAutoplayAll ? `AI-${state.selectedPlayerId}` : `${state.selectedPlayerId}`;
       this.fields.phase.textContent = phaseLabel(state.phase, state.time);
       this.fields.nextOrb.textContent = `${Math.min(state.nextRequiredOrb, 8)}`;
       this.fields.timeLeft.textContent = currentTimerLabel(state);

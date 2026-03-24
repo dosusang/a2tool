@@ -132,9 +132,6 @@ export class Game {
   }
 
   selectPlayer(id) {
-    if (this.debugAutoplayAll) {
-      return;
-    }
     this.selectedPlayerId = id;
     this.backToSetup();
   }
@@ -166,10 +163,9 @@ export class Game {
   }
 
   getCameraFocusPlayer() {
-    if (this.debugAutoplayAll) {
-      return this.state.players[0];
-    }
-    return this.state.players.find((player) => player.isUserControlled) ?? this.state.players[0];
+    return this.state.players.find((player) => player.id === this.selectedPlayerId)
+      ?? this.state.players.find((player) => player.isUserControlled)
+      ?? this.state.players[0];
   }
 
   tick = () => {
